@@ -19,20 +19,18 @@ This repository contains intentionally simple (and sometimes intentionally imper
 
 - `array-utils.ts`
   - Utility helpers (`head`, `last`, `chunk`) and a demo bug in `findLastEven` for fix exercises.
+- `users.route.ts`
+  - Minimal Express route handler with adjacent Vitest coverage in `users.route.test.ts`.
 - `auth.controller.ts`
   - Express-style auth controller with in-memory user storage and inline password hashing/verification for refactor demos.
 - `price-calculator.ts`
   - Placeholder file used for comment-driven development exercises.
 - `package.json`
-  - Project metadata, scripts, dependencies, and engine requirements.
+  - Project metadata, the focused test script, dependencies, and engine requirements.
 
 ## Scripts
 
-- `npm run dev` - Start dev mode with `tsx watch src/index.ts`
-- `npm run build` - Compile TypeScript with `tsc`
-- `npm run start` - Run compiled app from `dist/index.js`
-- `npm run typecheck` - Run type-checking without emit
-- `npm run test` - Run tests with Vitest
+- `npm test` - Run the Vitest suite once
 
 ## Getting Started
 
@@ -42,19 +40,13 @@ This repository contains intentionally simple (and sometimes intentionally imper
 npm install
 ```
 
-2. Run type-check:
+2. Run tests:
 
 ```bash
-npm run typecheck
-```
-
-3. Run tests:
-
-```bash
-npm run test
+npm test
 ```
 
 ## Notes
 
 - Some files are intentionally set up for live training tasks (bug fixing, refactoring, and scaffold-from-comments workflows).
-- This repo may include partial/demo-only structure depending on the session stage.
+- This workspace is intentionally file-oriented for training and does not include a runnable app entrypoint by default.

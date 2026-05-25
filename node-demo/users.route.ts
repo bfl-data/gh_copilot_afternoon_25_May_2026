@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
-interface CreateUserRequestBody {
+export interface CreateUserRequestBody {
   name?: string;
   email?: string;
 }
@@ -13,7 +13,42 @@ interface UserRecord {
   createdAt: string;
 }
 
+type CreateUserField = 'name' | 'email';
+
 const usersByEmail = new Map<string, UserRecord>();
+
+function createValidationErrorResponse(field: CreateUserField) {
+  return {
+    error: {
+      code: 'VALIDATION_ERROR',
+      message: 'name and email are required',
+      details: [
+        {
+          field,
+          issue: 'required',
+        },
+      ],
+    },
+  };
+}
+
+function createUserExistsResponse() {
+  return {
+    error: {
+      code: 'USER_EXISTS',
+      message: 'A user with this email already exists',
+    },
+  };
+}
+
+function createUserResponse(user: UserRecord) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+  };
+}
 
 /**
  * Creates a new user.
@@ -36,28 +71,13 @@ export async function createUserHandler(
   const { name, email } = req.body;
 
   if (!name || !email) {
-    return res.status(400).json({
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'name and email are required',
-        details: [
-          {
-            field: !name ? 'name' : 'email',
-            issue: 'required',
-          },
-        ],
-      },
-    });
+    const missingField: CreateUserField = !name ? 'name' : 'email';
+    return res.status(400).json(createValidationErrorResponse(missingField));
   }
 
   const normalizedEmail = email.trim().toLowerCase();
   if (usersByEmail.has(normalizedEmail)) {
-    return res.status(409).json({
-      error: {
-        code: 'USER_EXISTS',
-        message: 'A user with this email already exists',
-      },
-    });
+    return res.status(409).json(createUserExistsResponse());
   }
 
   const user: UserRecord = {
@@ -69,12 +89,7 @@ export async function createUserHandler(
 
   usersByEmail.set(normalizedEmail, user);
 
-  return res.status(201).json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    createdAt: user.createdAt,
-  });
+  return res.status(201).json(createUserResponse(user));
 }
 
 export const usersRouter = Router();

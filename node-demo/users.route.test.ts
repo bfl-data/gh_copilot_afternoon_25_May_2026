@@ -1,10 +1,6 @@
 import type { Request, Response } from 'express';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-interface CreateUserRequestBody {
-  name?: string;
-  email?: string;
-}
+import type { CreateUserRequestBody } from './users.route.js';
 
 type CreateUserHandler = (
   req: Request<unknown, unknown, CreateUserRequestBody>,
