@@ -1,5 +1,5 @@
 ---
-applyTo: "api/**/*.js"
+applyTo: "**/*.ts"
 description: "Instructions for backend API JavaScript files"
 ---
 
